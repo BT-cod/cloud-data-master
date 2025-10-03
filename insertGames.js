@@ -1,10 +1,12 @@
 const { connect } = require("./db");
 const fs = require("fs");
 
+/**
+ * Inserts games from gamesData.json into MongoDB
+ * and clears the file after a successful insert.
+ */
 async function insertGames() {
   const collection = await connect();
-
-  // Read JSON file
   const data = fs.readFileSync("gamesData.json", "utf-8");
   const games = JSON.parse(data);
 
@@ -13,11 +15,9 @@ async function insertGames() {
     process.exit();
   }
 
-  // Insert all documents into MongoDB
   const result = await collection.insertMany(games);
   console.log(`✅ Inserted ${result.insertedCount} games successfully.`);
 
-  // Clear the JSON file after successful insert
   fs.writeFileSync("gamesData.json", "[]", "utf-8");
   console.log("🧹 Cleared gamesData.json after insert.");
 
