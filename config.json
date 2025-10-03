@@ -1,0 +1,5 @@
+{
+  "type": "prod",
+  "mongoDB": "mongodb+srv://user1:dbUserPassword@cluster0.uzbdccj.mongodb.net/?tls=true",
+  "cloudServerIp": "3.110.123.45"
+}
