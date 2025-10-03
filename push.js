@@ -11,6 +11,8 @@ const prodDbName = "cricket";
 const collectionName = "games";
 const dataFile = "gamesData.json";
 
+let cachedConfig = null; // store config once
+
 // Utility function to check internet availability
 function checkInternet() {
   return new Promise((resolve) => {
@@ -25,14 +27,17 @@ function checkInternet() {
 }
 
 async function pushToAtlas() {
-  const config = await loadConfig();
-  if (!config.mongoDB) {
+  if (!cachedConfig) {
+    cachedConfig = await loadConfig(); // load only once
+  }
+
+  if (!cachedConfig.mongoDB) {
     notify(
       "Config Error",
       "No Atlas URI found. Restart and update config.json."
     );
     console.error("\x1b[31m❌ No Atlas URI found in config.json\x1b[0m");
-    process.exit(1);
+    return;
   }
 
   const isOnline = await checkInternet();
@@ -45,7 +50,7 @@ async function pushToAtlas() {
   console.log("🔍 Checking localDB to Push data to Atlas Server...");
 
   const localClient = new MongoClient(localUri);
-  const atlasClient = new MongoClient(config.mongoDB);
+  const atlasClient = new MongoClient(cachedConfig.mongoDB);
 
   try {
     await localClient.connect();
@@ -60,31 +65,23 @@ async function pushToAtlas() {
       return;
     }
 
-    // Remove _id before pushing
     const docsWithoutId = docs.map(({ _id, ...rest }) => rest);
     const result = await atlasDb.insertMany(docsWithoutId);
 
-    // Mark local docs as pushed
     const ids = docs.map((d) => d._id);
     await localDb.updateMany(
       { _id: { $in: ids } },
       { $set: { pushedToAtlas: true } }
     );
 
-    // Log & notify
     const successMsg = `✅ Pushed ${result.insertedCount} docs to Atlas`;
     logger.push(successMsg);
     notify("Push Success", successMsg);
     console.log(successMsg);
 
-    // Clear gamesData.json after successful push
-    try {
-      if (fs.existsSync(dataFile)) {
-        fs.writeFileSync(dataFile, "[]", "utf-8");
-        console.log(`🧹 Cleared ${dataFile} after successful push`);
-      }
-    } catch (fileErr) {
-      console.error("⚠️ Could not clear gamesData.json:", fileErr.message);
+    if (fs.existsSync(dataFile)) {
+      fs.writeFileSync(dataFile, "[]", "utf-8");
+      console.log(`🧹 Cleared ${dataFile} after successful push`);
     }
   } catch (err) {
     const failMsg = `❌ Push failed: ${err.message}`;
@@ -97,7 +94,11 @@ async function pushToAtlas() {
   }
 }
 
-// Check every 5 seconds instead of 5 minutes
-setInterval(pushToAtlas, 5 * 1000);
+// Load config ONCE and then schedule pushes
+(async () => {
+  cachedConfig = await loadConfig();
+  console.log("⚙️ Config loaded once at startup.");
+  setInterval(pushToAtlas, 5 * 1000);
+})();
 
 module.exports = { pushToAtlas };

@@ -12,3 +12,13 @@
 [3/10/2025, 5:50:12 pm] ✅ Pushed 1 docs to Atlas
 [3/10/2025, 6:02:21 pm] ❌ Push failed: read ECONNRESET
 [3/10/2025, 6:06:01 pm] ✅ Pushed 1 docs to Atlas
+[3/10/2025, 6:22:44 pm] ❌ Push failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.uzbdccj.mongodb.net
+[3/10/2025, 6:22:48 pm] ❌ Push failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.uzbdccj.mongodb.net
+[3/10/2025, 6:22:53 pm] ❌ Push failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.uzbdccj.mongodb.net
+[3/10/2025, 6:22:58 pm] ❌ Push failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.uzbdccj.mongodb.net
+[3/10/2025, 6:23:03 pm] ❌ Push failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.uzbdccj.mongodb.net
+[3/10/2025, 6:23:09 pm] ❌ Push failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.uzbdccj.mongodb.net
+[3/10/2025, 6:23:13 pm] ❌ Push failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.uzbdccj.mongodb.net
+[3/10/2025, 6:23:19 pm] ❌ Push failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.uzbdccj.mongodb.net
+[3/10/2025, 6:23:24 pm] ❌ Push failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.uzbdccj.mongodb.net
+[3/10/2025, 6:23:29 pm] ✅ Pushed 1 docs to Atlas
